@@ -1,23 +1,17 @@
 'use strict'
 const userForm = new UserForm();
-const serverCall = new ApiConnector();
-userForm.loginFromCallback = (data) => {
-    try {
-        serverCall.login(userForm.getData(data), userForm.loginFormAction());
-        
+userForm.loginFormCallback = data => ApiConnector.login(data, response => {
+    if (!response.success) {
+        return userForm.setLoginErrorMessage(response.error);
     }
-    catch (message) {
-        console.alert(userForm.setLoginErrorMessage(message));
-    }
+    userForm.loginFormAction(response);
     location.reload();
-}
-userForm.registerFormCallback = (addData) => {
-    try {
-        serverCall.register(userForm.getData(addData), userForm.registerFormAction());
-        
+});
+
+userForm.registerFormCallback = newData => ApiConnector.register(newData, response => {
+    if (!response.success) {
+        return userForm.setRegisterErrorMessage(response.error);
     }
-    catch (message) {
-        console.alert(userForm.setRegisterErrorMessage(message));
-    }
+    userForm.registerFormAction(response);
     location.reload();
-}
+});
