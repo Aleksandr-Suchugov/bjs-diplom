@@ -6,6 +6,7 @@ userForm.loginFormCallback = data => ApiConnector.login(data, response => {
     }
     userForm.loginFormAction(response);
     location.reload();
+    return;
 });
 
 userForm.registerFormCallback = newData => ApiConnector.register(newData, response => {
@@ -14,4 +15,5 @@ userForm.registerFormCallback = newData => ApiConnector.register(newData, respon
     }
     userForm.registerFormAction(response);
     location.reload();
+    return;
 });
