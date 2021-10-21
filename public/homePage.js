@@ -25,7 +25,7 @@ pNt.addMoneyCallback = credit => ApiConnector.addMoney(credit, response => {
         return pNt.setMessage(response.success, 'Успешное пополнение счета');
     }
     else {
-        return pNt.setMessage(response.success, 'Ошибка пополнения счета');
+        return pNt.setMessage(response.success, 'Ошибка: ' + response.error);
     }
 });
 
@@ -36,7 +36,7 @@ pNt.conversionMoneyCallback = exchange => ApiConnector.convertMoney(exchange, re
         return pNt.setMessage(response.success, 'Успешная конвертация');
     }
     else {
-        return pNt.setMessage(response.success, 'Ошибка конвертации');
+        return pNt.setMessage(response.success, 'Ошибка: ' + response.error);
     }
 });
 
@@ -47,6 +47,35 @@ pNt.sendMoneyCallback = debit => ApiConnector.transferMoney(debit, response => {
         return pNt.setMessage(response.success, 'Успешный перевод средств');
     }
     else {
-        return pNt.setMessage(response.success, 'Ошибка перевода средств');
+        return pNt.setMessage(response.success, 'Ошибка: ' + response.error);
     }
+});
+
+const favorite = new FavoritesWidget();
+ApiConnector.getFavorites(response => {
+    if (response.success) {
+        favorite.clearTable();
+        favorite.fillTable(response.data);
+        pNt.updateUsersList(response.data);
+    }
+ });
+
+ favorite.addUserCallback = addUser => ApiConnector.addUserToFavorites(addUser, response => {
+    if (response.success) {
+        favorite.clearTable();
+        favorite.fillTable(response.data);
+        pNt.updateUsersList(response.data);
+        pNt.setMessage(response.success, 'Добавлен новый пользователь');
+    }
+    else pNt.setMessage(response.success, 'Ошибка: ' + response.error);
+});
+
+favorite.removeUserCallback = deleteUser => ApiConnector.removeUserFromFavorites(deleteUser, response => {
+    if (response.success) {
+        favorite.clearTable();
+        favorite.fillTable(response.data);
+        pNt.updateUsersList(response.data);
+        pNt.setMessage(response.success, 'Пользователь удален');
+    }
+    else pNt.setMessage(response.success, 'Ошибка: ' + response.error);
 });
